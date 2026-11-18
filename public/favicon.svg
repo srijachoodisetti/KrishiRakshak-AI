@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#176B45" />
+  <!-- Soil base line -->
+  <path d="M17 48h30" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Stem growing from soil -->
+  <path d="M26 48c0-8 3-13 6-18" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Primary leaf (right) -->
+  <path d="M32 30c0-9 8-16 17-16 0 9-8 16-17 16Z" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Secondary leaf (left) -->
+  <path d="M32 30c0-7-5-12-13-12 0 7 5 12 13 12Z" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

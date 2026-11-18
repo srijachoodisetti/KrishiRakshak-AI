@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --color-forest: #176B45;
+  --color-leaf: #75B843;
+  --color-cream: #F6F8F1;
+  --color-harvest: #F2C14E;
+  --color-warning: #E58A32;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #F6F8F1;
+  color: #24332A;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Telugu typography */
+html[lang="te"] body,
+.font-telugu {
+  font-family: 'Noto Sans Telugu', 'Inter', sans-serif;
+}
+
+/* Ensure Telugu text has correct line height and responsive spacing */
+html[lang="te"] {
+  line-height: 1.6;
+}
+
+html[lang="te"] * {
+  letter-spacing: normal;
+}
+
+html[lang="te"] h1,
+html[lang="te"] h2,
+html[lang="te"] h3,
+html[lang="te"] h4 {
+  line-height: 1.35;
+}
+
+html[lang="te"] p,
+html[lang="te"] span,
+html[lang="te"] a,
+html[lang="te"] button,
+html[lang="te"] li {
+  line-height: 1.65;
+}
