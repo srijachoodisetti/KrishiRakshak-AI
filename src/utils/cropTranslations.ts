@@ -279,3 +279,87 @@ export function isCropMatching(cropA: string, cropB: string): boolean {
   const lowerB = cropB.trim().toLowerCase()
   return lowerA.includes(lowerB) || lowerB.includes(lowerA)
 }
+
+// Soil types localization
+export const SOIL_TRANSLATIONS: Record<string, { te: string; hi: string; en: string }> = {
+  'Red Soil': { te: 'ఎర్ర నేలలు', hi: 'लाल मिट्टी', en: 'Red Soil' },
+  'Black Soil': { te: 'నల్ల రేగడి నేలలు', hi: 'काली मिट्टी', en: 'Black Soil' },
+  'Alluvial Soil': { te: 'ఒండ్రు నేలలు', hi: 'जलोढ़ मिट्टी', en: 'Alluvial Soil' },
+  'Sandy Soil': { te: 'ఇసుక నేలలు', hi: 'बलुई / रेतीली मिट्टी', en: 'Sandy Soil' },
+  'Clay Soil': { te: 'బంకమట్టి నేలలు', hi: 'चिकनी मिट्टी', en: 'Clay Soil' },
+  'Loamy Soil': { te: 'సారవంతమైన గోరుమట్టి నేలలు', hi: 'दोमट मिट्टी', en: 'Loamy Soil' },
+  'Other': { te: 'ఇతర నేల రకం', hi: 'अन्य मिट्टी', en: 'Other' },
+}
+
+export function localizeSoilType(soil: string | undefined | null, lang: 'en' | 'te' | 'hi'): string {
+  if (!soil) return lang === 'te' ? 'పేర్కొనబడలేదు' : lang === 'hi' ? 'अनिर्दिष्ट' : 'Unspecified'
+  return SOIL_TRANSLATIONS[soil]?.[lang] || soil
+}
+
+// Irrigation types localization
+export const IRRIGATION_TRANSLATIONS: Record<string, { te: string; hi: string; en: string }> = {
+  'Drip Irrigation': { te: 'బిందు సేద్యం (డ్రిప్)', hi: 'ड्रिप सिंचाई (टपक प्रणाली)', en: 'Drip Irrigation' },
+  'Sprinkler Irrigation': { te: 'తుంపర సేద్యం (స్ప్రింక్లర్)', hi: 'फव्वारा सिंचाई (स्प्रिंकलर)', en: 'Sprinkler Irrigation' },
+  'Canal Irrigation': { te: 'కాలువ నీటిపారుదల', hi: 'नहर सिंचाई', en: 'Canal Irrigation' },
+  'Borewell': { te: 'బోరుబావి', hi: 'नलकूप / बोरवेल', en: 'Borewell' },
+  'Rainfed': { te: 'వర్షాధారం', hi: 'वर्षा आधारित (बारानी)', en: 'Rainfed' },
+  'Other': { te: 'ఇతర నీటి వనరు', hi: 'अन्य सिंचाई', en: 'Other' },
+}
+
+export function localizeIrrigationType(irr: string | undefined | null, lang: 'en' | 'te' | 'hi'): string {
+  if (!irr) return lang === 'te' ? 'సాధారణం' : lang === 'hi' ? 'सामान्य' : 'Standard'
+  return IRRIGATION_TRANSLATIONS[irr]?.[lang] || irr
+}
+
+// Growth stages localization
+export const GROWTH_STAGE_TRANSLATIONS: Record<string, { te: string; hi: string; en: string }> = {
+  'Sowing / Seedling': { te: 'విత్తే దశ / నారు దశ', hi: 'बुवाई / अंकुरण / पौध अवस्था', en: 'Sowing / Seedling' },
+  'Vegetative': { te: 'శాకీయ పెరుగుదల దశ', hi: 'वानस्पतिक वृद्धि अवस्था', en: 'Vegetative' },
+  'Flowering': { te: 'పూత దశ', hi: 'फूल आने की अवस्था (पुष्पन)', en: 'Flowering' },
+  'Fruiting / Grain Formation': { te: 'కాయ / గింజ పాలుపోసుకునే దశ', hi: 'फल / दाना भराव अवस्था', en: 'Fruiting / Grain Formation' },
+  'Maturity / Harvesting': { te: 'పక్వత / కోత దశ', hi: 'परिपक्वता / कटाई अवस्था', en: 'Maturity / Harvesting' },
+  'Post-Harvest': { te: 'కోత అనంతర దశ', hi: 'कटाई उपरांत अवस्था', en: 'Post-Harvest' },
+}
+
+export function localizeGrowthStage(stage: string | undefined | null, lang: 'en' | 'te' | 'hi'): string {
+  if (!stage) return lang === 'te' ? 'సాగులో ఉంది' : lang === 'hi' ? 'सक्रिय' : 'Active'
+  return GROWTH_STAGE_TRANSLATIONS[stage]?.[lang] || stage
+}
+
+// Activity types localization
+export const ACTIVITY_TRANSLATIONS: Record<string, { te: string; hi: string; en: string }> = {
+  'Irrigation': { te: 'నీటి తడులు', hi: 'सिंचाई', en: 'Irrigation' },
+  'Fertilizer application': { te: 'ఎరువుల యాజమాన్యం', hi: 'उर्वरक / खाद प्रयोग', en: 'Fertilizer application' },
+  'Pesticide application': { te: 'పురుగు / తెగులు మందుల పిచికారీ', hi: 'कीटनाशक / दवा छिड़काव', en: 'Pesticide application' },
+  'Sowing': { te: 'విత్తనం విత్తడం / నాటడం', hi: 'बुवाई / रोपाई', en: 'Sowing' },
+  'Weeding': { te: 'కలుపు తీత', hi: 'निराई-गुड़ाई', en: 'Weeding' },
+  'Harvesting': { te: 'పంట కోత', hi: 'फसल कटाई', en: 'Harvesting' },
+  'Other': { te: 'ఇతర క్షేత్ర పని', hi: 'अन्य कृषि कार्य', en: 'Other' },
+}
+
+export function localizeActivityType(act: string | undefined | null, lang: 'en' | 'te' | 'hi'): string {
+  if (!act) return ''
+  return ACTIVITY_TRANSLATIONS[act]?.[lang] || act
+}
+
+// Land unit localization
+export function localizeLandUnit(unit: string | undefined | null, lang: 'en' | 'te' | 'hi'): string {
+  if (unit === 'Hectares') return lang === 'te' ? 'హెక్టార్లు' : lang === 'hi' ? 'हेक्टेयर' : 'Hectares'
+  return lang === 'te' ? 'ఎకరాలు' : lang === 'hi' ? 'एकड़' : 'Acres'
+}
+
+// Treatment type localization
+export function localizeTreatmentType(type: string | undefined | null, lang: 'en' | 'te' | 'hi'): string {
+  if (!type) return ''
+  if (type.includes('Organic') || type.includes('Biological') || type.includes('సేంద్రీయ')) {
+    return lang === 'te' ? 'సేంద్రీయ / జీవ నియంత్రణ' : lang === 'hi' ? 'जैविक / प्राकृतिक उपचार' : 'Organic / Biological'
+  }
+  if (type.includes('Chemical') || type.includes('రసాయన')) {
+    return lang === 'te' ? 'రసాయన యాజమాన్యం' : lang === 'hi' ? 'रासायनिक प्रबंधन' : 'Chemical Guidance'
+  }
+  if (type.includes('Cultural') || type.includes('సాగు')) {
+    return lang === 'te' ? 'సాగు పద్ధతులు / నివారణ' : lang === 'hi' ? 'सस्य क्रियाएं / निवारक उपाय' : 'Cultural / Agronomic'
+  }
+  return lang === 'te' ? 'ఇతర సిఫార్సు' : lang === 'hi' ? 'अन्य सिफारिश' : 'Other Guidance'
+}
+

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Sprout, Languages, ArrowLeft } from 'lucide-react'
+import { Sprout, ArrowLeft } from 'lucide-react'
 import { useLanguage } from '../../hooks/useLanguage'
+import { LanguageSelector } from '../common/LanguageSelector'
 
 interface AuthLayoutProps {
   title: string
@@ -10,7 +11,7 @@ interface AuthLayoutProps {
 }
 
 export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
-  const { t, toggleLanguage, language } = useLanguage()
+  const { t, language } = useLanguage()
 
   return (
     <div className="flex min-h-screen flex-col bg-cream text-[#24332A]">
@@ -22,19 +23,21 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
               <Sprout size={24} />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-forest">KrishiRakshak</h1>
-              <p className="text-[10px] tracking-wider text-gray-500">AI · SMART AGRICULTURE</p>
+              <h1 className="text-lg font-bold text-forest">
+                {language === 'te' ? 'కృషి రక్షక్' : language === 'hi' ? 'कृषि रक्षक' : 'KrishiRakshak'}
+              </h1>
+              <p className="text-[10px] tracking-wider text-gray-500">
+                {language === 'te'
+                  ? 'AI · స్మార్ట్ వ్యవసాయం'
+                  : language === 'hi'
+                  ? 'AI · स्मार्ट कृषि'
+                  : 'AI · SMART AGRICULTURE'}
+              </p>
             </div>
           </Link>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#24332A] transition hover:bg-cream"
-            >
-              <Languages size={15} />
-              {language === 'en' ? 'తెలుగు' : language === 'te' ? 'हिन्दी' : 'English'}
-            </button>
+            <LanguageSelector variant="header" align="right" />
 
             <Link
               to="/"

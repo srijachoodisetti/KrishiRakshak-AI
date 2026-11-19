@@ -24,6 +24,7 @@ import {
   createFarmActivity,
   deleteFarmActivity,
 } from '../../services/activityService'
+import { localizeActivityType, localizeCropName } from '../../utils/cropTranslations'
 import type { Farm } from '../../types/farm'
 import type { Crop } from '../../types/crop'
 import type { FarmActivity, FarmActivityFormData, FarmActivityType } from '../../types/activity'
@@ -40,7 +41,7 @@ const ACTIVITY_TYPES: FarmActivityType[] = [
 
 export function ActivitiesPage() {
   const { user } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const [farms, setFarms] = useState<Farm[]>([])
   const [crops, setCrops] = useState<Crop[]>([])
@@ -255,7 +256,7 @@ export function ActivitiesPage() {
               className="px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition shrink-0 inline-flex items-center gap-1.5"
             >
               <RefreshCw size={13} />
-              <span>Retry</span>
+              <span>{language === 'te' ? 'మళ్లీ ప్రయత్నించండి' : language === 'hi' ? 'पुनः प्रयास करें' : 'Retry'}</span>
             </button>
           </div>
         )}
@@ -265,13 +266,19 @@ export function ActivitiesPage() {
           <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <AlertCircle size={18} className="text-amber-600 shrink-0" />
-              <span>Register a farm first to begin logging agricultural operations.</span>
+              <span>
+                {language === 'te'
+                  ? 'వ్యవసాయ పనులను నమోదు చేయడానికి ముందు మీరు ఒక పొలాన్ని నమోదు చేయాలి.'
+                  : language === 'hi'
+                  ? 'खेत गतिविधियों को दर्ज करने से पहले आपको एक खेत पंजीकृत करना होगा।'
+                  : 'Register a farm first to begin logging agricultural operations.'}
+              </span>
             </div>
             <Link
               to="/farm"
               className="px-3 py-1.5 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700 transition"
             >
-              Register Farm
+              {t.dashboard.registerFirstFarm}
             </Link>
           </div>
         )}
@@ -280,7 +287,13 @@ export function ActivitiesPage() {
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center text-center">
             <RefreshCw size={26} className="animate-spin text-[#176B45]" />
-            <p className="mt-3 text-xs text-gray-500 font-medium">Loading activity journal...</p>
+            <p className="mt-3 text-xs text-gray-500 font-medium">
+              {language === 'te'
+                ? 'వ్యవసాయ దినచర్యను లోడ్ చేస్తోంది...'
+                : language === 'hi'
+                ? 'गतिविधि विवरण लोड हो रहा है...'
+                : 'Loading activity journal...'}
+            </p>
           </div>
         ) : activities.length === 0 ? (
           <div className="p-8 sm:p-12 rounded-3xl border border-gray-200 bg-white text-center shadow-xs">
@@ -318,13 +331,13 @@ export function ActivitiesPage() {
 
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-sm text-gray-900">{act.activity_type}</span>
+                        <span className="font-bold text-sm text-gray-900">{localizeActivityType(act.activity_type, language)}</span>
                         <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">
                           {getFarmName(act.farm_id)}
                         </span>
                         {cropName && (
                           <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#176B45] font-semibold border border-[#75B843]/20">
-                            {cropName}
+                            {localizeCropName(cropName, language)}
                           </span>
                         )}
                       </div>
@@ -403,10 +416,16 @@ export function ActivitiesPage() {
                         onChange={(e) => setFormData({ ...formData, crop_id: e.target.value || undefined })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-[#176B45] focus:ring-2 focus:ring-[#176B45]/20 outline-none bg-white"
                       >
-                        <option value="">General Field Work (No specific crop)</option>
+                        <option value="">
+                          {language === 'te'
+                            ? 'సాధారణ క్షేత్ర పని (నిర్దిష్ట పంట లేదు)'
+                            : language === 'hi'
+                            ? 'सामान्य खेत कार्य (कोई विशिष्ट फसल नहीं)'
+                            : 'General Field Work (No specific crop)'}
+                        </option>
                         {farmCrops.map((c) => (
                           <option key={c.id} value={c.id}>
-                            {c.crop_name} {c.variety ? `(${c.variety})` : ''}
+                            {localizeCropName(c.crop_name, language)} {c.variety ? `(${c.variety})` : ''}
                           </option>
                         ))}
                       </select>
@@ -427,7 +446,7 @@ export function ActivitiesPage() {
                     >
                       {ACTIVITY_TYPES.map((at) => (
                         <option key={at} value={at}>
-                          {at}
+                          {localizeActivityType(at, language)}
                         </option>
                       ))}
                     </select>

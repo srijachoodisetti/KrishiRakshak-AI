@@ -19,13 +19,14 @@ import { useLanguage } from '../../hooks/useLanguage'
 import { fetchFarmerFarms } from '../../services/farmService'
 import { fetchFarmerCrops } from '../../services/cropService'
 import { fetchFarmerActivities } from '../../services/activityService'
+import { localizeLandUnit, localizeCropName } from '../../utils/cropTranslations'
 import type { Farm } from '../../types/farm'
 import type { Crop } from '../../types/crop'
 import type { FarmActivity } from '../../types/activity'
 
 export function FarmerDashboard() {
   const { user, profile } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const [farms, setFarms] = useState<Farm[]>([])
   const [crops, setCrops] = useState<Crop[]>([])
@@ -62,8 +63,9 @@ export function FarmerDashboard() {
     }
   }, [user])
 
+  const defaultFarmer = language === 'te' ? 'రైతు' : language === 'hi' ? 'किसान' : 'Farmer'
   const displayName =
-    profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Farmer'
+    profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || defaultFarmer
 
   // Calculate actual statistics from user's Supabase records
   const totalArea = farms.reduce((acc, curr) => acc + (Number(curr.land_area) || 0), 0)
@@ -104,7 +106,13 @@ export function FarmerDashboard() {
         {loading ? (
           <div className="py-10 flex flex-col items-center justify-center text-center">
             <RefreshCw size={24} className="animate-spin text-[#176B45]" />
-            <p className="mt-2 text-xs text-gray-500 font-medium">Updating farm records...</p>
+            <p className="mt-2 text-xs text-gray-500 font-medium">
+              {language === 'te'
+                ? 'వ్యవసాయ రికార్డులను లోడ్ చేస్తోంది...'
+                : language === 'hi'
+                ? 'खेत रिकॉर्ड लोड किए जा रहे हैं...'
+                : 'Updating farm records...'}
+            </p>
           </div>
         ) : farms.length === 0 ? (
           /* Empty State */
@@ -135,9 +143,11 @@ export function FarmerDashboard() {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-medium text-gray-500">{t.dashboard.quickStatsFarms}</p>
-                <p className="text-xl font-bold text-gray-900 mt-0.5">{farms.length} Plots</p>
+                <p className="text-xl font-bold text-gray-900 mt-0.5">
+                  {farms.length} {language === 'te' ? 'పొలాలు' : language === 'hi' ? 'खेत' : 'Plots'}
+                </p>
                 <p className="text-[11px] text-gray-400 truncate">
-                  {primaryFarm ? primaryFarm.farm_name : 'Verified'}
+                  {primaryFarm ? primaryFarm.farm_name : (language === 'te' ? 'ధృవీకరించబడింది' : language === 'hi' ? 'सत्यापित' : 'Verified')}
                 </p>
               </div>
             </div>
@@ -149,9 +159,11 @@ export function FarmerDashboard() {
               <div className="min-w-0">
                 <p className="text-xs font-medium text-gray-500">{t.dashboard.totalLandArea}</p>
                 <p className="text-xl font-bold text-gray-900 mt-0.5">
-                  {totalArea.toFixed(1)} {primaryFarm?.land_area_unit || 'Acres'}
+                  {totalArea.toFixed(1)} {localizeLandUnit(primaryFarm?.land_area_unit, language)}
                 </p>
-                <p className="text-[11px] text-gray-400">Total Cultivated</p>
+                <p className="text-[11px] text-gray-400">
+                  {language === 'te' ? 'మొత్తం సాగు విస్తీర్ణం' : language === 'hi' ? 'कुल जोत रकबा' : 'Total Cultivated'}
+                </p>
               </div>
             </div>
 
@@ -161,9 +173,11 @@ export function FarmerDashboard() {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-medium text-gray-500">{t.dashboard.activeCrops}</p>
-                <p className="text-xl font-bold text-gray-900 mt-0.5">{crops.length} Active</p>
+                <p className="text-xl font-bold text-gray-900 mt-0.5">
+                  {crops.length} {language === 'te' ? 'పంటలు' : language === 'hi' ? 'फसलें' : 'Active'}
+                </p>
                 <p className="text-[11px] text-gray-400 truncate">
-                  {crops[0]?.crop_name || 'Monitoring'}
+                  {crops[0]?.crop_name ? localizeCropName(crops[0].crop_name, language) : (language === 'te' ? 'పర్యవేక్షణలో ఉంది' : language === 'hi' ? 'निगरानी में' : 'Monitoring')}
                 </p>
               </div>
             </div>
@@ -173,9 +187,15 @@ export function FarmerDashboard() {
                 <ClipboardList size={24} />
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-medium text-gray-500">Activities Logged</p>
-                <p className="text-xl font-bold text-gray-900 mt-0.5">{activities.length} Entries</p>
-                <p className="text-[11px] text-gray-400">Field Operations</p>
+                <p className="text-xs font-medium text-gray-500">
+                  {t.dashboard.sidebar.farmActivities}
+                </p>
+                <p className="text-xl font-bold text-gray-900 mt-0.5">
+                  {activities.length} {language === 'te' ? 'నమోదులు' : language === 'hi' ? 'प्रविष्टियां' : 'Entries'}
+                </p>
+                <p className="text-[11px] text-gray-400">
+                  {language === 'te' ? 'క్షేత్ర కార్యకలాపాలు' : language === 'hi' ? 'खेत संचालन' : 'Field Operations'}
+                </p>
               </div>
             </div>
           </div>
@@ -193,7 +213,11 @@ export function FarmerDashboard() {
             </h3>
             <p className="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">
               {primaryFarm
-                ? `Monitoring live conditions for ${primaryFarm.farm_name} (${primaryFarm.village || primaryFarm.district || 'Farm Location'}).`
+                ? (language === 'te'
+                    ? `${primaryFarm.farm_name} (${primaryFarm.village || primaryFarm.district || 'పొలం ప్రాంతం'}) కోసం ప్రత్యక్ష వాతావరణ సమాచారం.`
+                    : language === 'hi'
+                    ? `${primaryFarm.farm_name} (${primaryFarm.village || primaryFarm.district || 'खेत का स्थान'}) के लिए सजीव मौसम की जानकारी।`
+                    : `Monitoring live conditions for ${primaryFarm.farm_name} (${primaryFarm.village || primaryFarm.district || 'Farm Location'}).`)
                 : t.dashboard.weatherCardDesc}
             </p>
             <div className="mt-6 flex items-center gap-3">

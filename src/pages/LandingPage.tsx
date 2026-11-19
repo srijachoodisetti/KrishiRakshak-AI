@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useLanguage } from '../hooks/useLanguage'
+import { LanguageSelector } from '../components/common/LanguageSelector'
 
 const quickHighlightIcons = [ScanLine, CloudSun, ShieldCheck]
 
@@ -40,14 +41,10 @@ const stepIcons = [User, MapPin, Search, Sprout]
 
 export function LandingPage() {
   const { user, profile, signOut } = useAuth()
-  const { t, language, setLanguage } = useLanguage()
+  const { t, language } = useLanguage()
   const [mobileMenu, setMobileMenu] = useState(false)
 
   const isTelugu = language === 'te'
-
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'te' : language === 'te' ? 'hi' : 'en')
-  }
 
   const handleSignOut = async () => {
     try {
@@ -87,13 +84,7 @@ export function LandingPage() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium hover:bg-cream"
-            >
-              <Languages size={17} />
-              {t.nav.currentLanguageLabel}
-            </button>
+            <LanguageSelector variant="header" align="right" />
 
             {user ? (
               <div className="flex items-center gap-3">
@@ -179,13 +170,9 @@ export function LandingPage() {
               {t.nav.features}
             </a>
 
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 text-left font-medium text-forest"
-            >
-              <Languages size={17} />
-              {t.nav.currentLanguageLabel}
-            </button>
+            <div className="py-1">
+              <LanguageSelector variant="sidebar" align="left" />
+            </div>
 
             {user ? (
               <>
@@ -495,7 +482,13 @@ export function LandingPage() {
 
                   <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
                     <Lock size={14} className="text-gray-400" />
-                    <span>Login-First Protected Access</span>
+                    <span>
+                      {language === 'te'
+                        ? 'లాగిన్ ద్వారా రక్షిత ప్రవేశం'
+                        : language === 'hi'
+                        ? 'लॉगिन-सुरक्षित पहुंच'
+                        : 'Login-First Protected Access'}
+                    </span>
                   </div>
                 </div>
               </div>

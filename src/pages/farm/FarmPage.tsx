@@ -20,6 +20,11 @@ import { FarmLocationPicker } from '../../components/farm/FarmLocationPicker'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
 import { fetchFarmerFarms, createFarm, updateFarm, deleteFarm } from '../../services/farmService'
+import {
+  localizeSoilType,
+  localizeIrrigationType,
+  localizeLandUnit,
+} from '../../utils/cropTranslations'
 import type { Farm, FarmFormData, LandAreaUnit, SoilType, IrrigationType } from '../../types/farm'
 
 const SOIL_TYPES: SoilType[] = [
@@ -43,7 +48,7 @@ const IRRIGATION_TYPES: IrrigationType[] = [
 
 export function FarmPage() {
   const { user } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const [farms, setFarms] = useState<Farm[]>([])
   const [loading, setLoading] = useState(true)
@@ -226,7 +231,13 @@ export function FarmPage() {
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center text-center">
             <RefreshCw size={26} className="animate-spin text-[#176B45]" />
-            <p className="mt-3 text-xs text-gray-500 font-medium">Loading your farm records...</p>
+            <p className="mt-3 text-xs text-gray-500 font-medium">
+              {language === 'te'
+                ? 'మీ పొలం రికార్డులను లోడ్ చేస్తోంది...'
+                : language === 'hi'
+                ? 'आपके खेत रिकॉर्ड लोड किए जा रहे हैं...'
+                : 'Loading your farm records...'}
+            </p>
           </div>
         ) : farms.length === 0 ? (
           /* Empty state */
@@ -293,40 +304,40 @@ export function FarmPage() {
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Layers size={12} />
-                        Area
+                        {t.farm.landArea}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5">
-                        {farm.land_area} {farm.land_area_unit}
+                        {farm.land_area} {localizeLandUnit(farm.land_area_unit, language)}
                       </p>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Tractor size={12} />
-                        Soil Type
+                        {t.farm.soilType}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5 truncate">
-                        {farm.soil_type || 'Unspecified'}
+                        {localizeSoilType(farm.soil_type, language)}
                       </p>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Droplets size={12} />
-                        Irrigation
+                        {t.farm.irrigationType}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5 truncate">
-                        {farm.irrigation_type || 'Standard'}
+                        {localizeIrrigationType(farm.irrigation_type, language)}
                       </p>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Droplets size={12} />
-                        Water Source
+                        {t.farm.waterSource}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5 truncate">
-                        {farm.water_source || 'Rainfed'}
+                        {farm.water_source || (language === 'te' ? 'వర్షాధారం' : language === 'hi' ? 'वर्षा आधारित' : 'Rainfed')}
                       </p>
                     </div>
                   </div>
@@ -362,14 +373,20 @@ export function FarmPage() {
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#176B45] hover:text-[#125335] transition"
                   >
                     <CloudSun size={15} />
-                    <span>View Hyperlocal Weather</span>
+                    <span>
+                      {language === 'te'
+                        ? 'వాతావరణ వివరాలు చూడండి'
+                        : language === 'hi'
+                        ? 'सटीक मौसम देखें'
+                        : 'View Hyperlocal Weather'}
+                    </span>
                   </Link>
 
                   <Link
                     to="/crops"
                     className="text-xs font-semibold text-gray-500 hover:text-gray-800 transition"
                   >
-                    Manage Crops &rarr;
+                    {language === 'te' ? 'పంటల నిర్వహణ →' : language === 'hi' ? 'फसल प्रबंधन →' : 'Manage Crops →'}
                   </Link>
                 </div>
               </div>
@@ -522,8 +539,8 @@ export function FarmPage() {
                       }
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-[#176B45] focus:ring-2 focus:ring-[#176B45]/20 outline-none bg-white"
                     >
-                      <option value="Acres">Acres</option>
-                      <option value="Hectares">Hectares</option>
+                      <option value="Acres">{localizeLandUnit('Acres', language)}</option>
+                      <option value="Hectares">{localizeLandUnit('Hectares', language)}</option>
                     </select>
                   </div>
                 </div>
@@ -541,7 +558,7 @@ export function FarmPage() {
                     >
                       {SOIL_TYPES.map((st) => (
                         <option key={st} value={st}>
-                          {st}
+                          {localizeSoilType(st, language)}
                         </option>
                       ))}
                     </select>
@@ -558,7 +575,7 @@ export function FarmPage() {
                     >
                       {IRRIGATION_TYPES.map((it) => (
                         <option key={it} value={it}>
-                          {it}
+                          {localizeIrrigationType(it, language)}
                         </option>
                       ))}
                     </select>

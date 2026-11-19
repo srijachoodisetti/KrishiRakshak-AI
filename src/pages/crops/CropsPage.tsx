@@ -18,6 +18,11 @@ import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
 import { fetchFarmerFarms } from '../../services/farmService'
 import { fetchFarmerCrops, createCrop, deleteCrop } from '../../services/cropService'
+import {
+  localizeCropName,
+  localizeGrowthStage,
+  localizeLandUnit,
+} from '../../utils/cropTranslations'
 import type { Farm } from '../../types/farm'
 import type { Crop, CropFormData, GrowthStage } from '../../types/crop'
 
@@ -46,7 +51,7 @@ const GROWTH_STAGES: GrowthStage[] = [
 
 export function CropsPage() {
   const { user } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const [farms, setFarms] = useState<Farm[]>([])
   const [crops, setCrops] = useState<Crop[]>([])
@@ -247,7 +252,7 @@ export function CropsPage() {
               className="px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition shrink-0 inline-flex items-center gap-1.5"
             >
               <RefreshCw size={13} />
-              <span>Retry</span>
+              <span>{language === 'te' ? 'మళ్లీ ప్రయత్నించండి' : language === 'hi' ? 'पुनः प्रयास करें' : 'Retry'}</span>
             </button>
           </div>
         )}
@@ -257,13 +262,19 @@ export function CropsPage() {
           <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <AlertCircle size={18} className="text-amber-600 shrink-0" />
-              <span>You must register a farm before adding crops.</span>
+              <span>
+                {language === 'te'
+                  ? 'పంటలను నమోదు చేయడానికి ముందు మీరు ఒక పొలాన్ని నమోదు చేయాలి.'
+                  : language === 'hi'
+                  ? 'फसलें जोड़ने से पहले आपको एक खेत पंजीकृत करना होगा।'
+                  : 'You must register a farm before adding crops.'}
+              </span>
             </div>
             <Link
               to="/farm"
               className="px-3 py-1.5 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700 transition"
             >
-              Register Farm
+              {t.dashboard.registerFirstFarm}
             </Link>
           </div>
         )}
@@ -272,7 +283,13 @@ export function CropsPage() {
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center text-center">
             <RefreshCw size={26} className="animate-spin text-[#176B45]" />
-            <p className="mt-3 text-xs text-gray-500 font-medium">Loading crops...</p>
+            <p className="mt-3 text-xs text-gray-500 font-medium">
+              {language === 'te'
+                ? 'పంటల జాబితాను లోడ్ చేస్తోంది...'
+                : language === 'hi'
+                ? 'फसलों की सूची लोड हो रही है...'
+                : 'Loading crops...'}
+            </p>
           </div>
         ) : crops.length === 0 ? (
           <div className="p-8 sm:p-12 rounded-3xl border border-gray-200 bg-white text-center shadow-xs">
@@ -326,7 +343,9 @@ export function CropsPage() {
                   </div>
 
                   <div className="mt-4 p-3 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-between text-xs">
-                    <span className="text-gray-500 font-medium">Farm Plot</span>
+                    <span className="text-gray-500 font-medium">
+                      {language === 'te' ? 'పొలం విభాగం' : language === 'hi' ? 'खेत का प्लॉट' : 'Farm Plot'}
+                    </span>
                     <strong className="text-gray-800">{getFarmName(crop.farm_id)}</strong>
                   </div>
 
@@ -334,40 +353,40 @@ export function CropsPage() {
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Layers size={12} />
-                        Cultivated
+                        {t.crops.cultivatedArea}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5">
-                        {crop.cultivated_area} Acres
+                        {crop.cultivated_area} {localizeLandUnit('Acres', language)}
                       </p>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <CheckCircle2 size={12} />
-                        Stage
+                        {t.crops.growthStage}
                       </span>
                       <p className="font-semibold text-[#176B45] mt-0.5 truncate">
-                        {crop.growth_stage || 'Active'}
+                        {localizeGrowthStage(crop.growth_stage, language)}
                       </p>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Calendar size={12} />
-                        Sown On
+                        {t.crops.sowingDate}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5">
-                        {crop.sowing_date || 'Recorded'}
+                        {crop.sowing_date || (language === 'te' ? 'నమోదైంది' : language === 'hi' ? 'दर्ज' : 'Recorded')}
                       </p>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-gray-400 flex items-center gap-1">
                         <Calendar size={12} />
-                        Est. Harvest
+                        {t.crops.expectedHarvestDate}
                       </span>
                       <p className="font-semibold text-gray-800 mt-0.5">
-                        {crop.expected_harvest_date || 'Pending'}
+                        {crop.expected_harvest_date || (language === 'te' ? 'పెండింగ్‌లో ఉంది' : language === 'hi' ? 'लंबित' : 'Pending')}
                       </p>
                     </div>
                   </div>
@@ -385,13 +404,15 @@ export function CropsPage() {
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#176B45] hover:underline"
                   >
                     <FileText size={14} />
-                    <span>Log Field Activity</span>
+                    <span>
+                      {language === 'te' ? 'క్షేత్ర పనిని నమోదు చేయండి' : language === 'hi' ? 'खेत कार्य दर्ज करें' : 'Log Field Activity'}
+                    </span>
                   </Link>
                   <Link
                     to="/crop-doctor"
                     className="text-xs font-semibold text-gray-500 hover:text-gray-800 transition"
                   >
-                    Crop Doctor &rarr;
+                    {t.dashboard.sidebar.cropDoctor || 'Crop Doctor'} &rarr;
                   </Link>
                 </div>
               </div>
@@ -476,7 +497,7 @@ export function CropsPage() {
                     >
                       {CROP_OPTIONS.map((c) => (
                         <option key={c} value={c}>
-                          {c}
+                          {localizeCropName(c, language)}
                         </option>
                       ))}
                     </select>
@@ -490,7 +511,7 @@ export function CropsPage() {
                       type="text"
                       value={formData.variety}
                       onChange={(e) => setFormData({ ...formData, variety: e.target.value })}
-                      placeholder="e.g. BPT 5204 (Samba Masuri)"
+                      placeholder={language === 'te' ? 'ఉదా. BPT 5204 (సాంబ మసూరి)' : language === 'hi' ? 'उदा. बीपीटी 5204 (सांभा मसूरी)' : 'e.g. BPT 5204 (Samba Masuri)'}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:border-[#176B45] focus:ring-2 focus:ring-[#176B45]/20 outline-none"
                     />
                   </div>
@@ -500,7 +521,7 @@ export function CropsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1">
-                      {t.crops.cultivatedArea} (Acres) *
+                      {t.crops.cultivatedArea} ({localizeLandUnit('Acres', language)}) *
                     </label>
                     <input
                       type="number"
@@ -527,7 +548,7 @@ export function CropsPage() {
                     >
                       {GROWTH_STAGES.map((gs) => (
                         <option key={gs} value={gs}>
-                          {gs}
+                          {localizeGrowthStage(gs, language)}
                         </option>
                       ))}
                     </select>

@@ -10,7 +10,6 @@ import {
   User,
   Settings,
   LogOut,
-  Languages,
   Menu,
   X,
   Bell,
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
+import { LanguageSelector } from '../common/LanguageSelector'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -27,7 +27,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
   const { user, profile, signOut } = useAuth()
-  const { t, language, setLanguage } = useLanguage()
+  const { t, language } = useLanguage()
   const location = useLocation()
   const navigate = useNavigate()
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
@@ -44,11 +44,8 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
     }
   }
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'te' : 'en')
-  }
-
-  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Farmer'
+  const defaultFarmerLabel = language === 'te' ? 'రైతు' : language === 'hi' ? 'किसान' : 'Farmer'
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || defaultFarmerLabel
   const displayLocation = [profile?.village, profile?.district].filter(Boolean).join(', ')
 
   const navItems = [
@@ -102,7 +99,7 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
           <button
             onClick={() => setMobileSidebarOpen(true)}
             className="p-1.5 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50"
-            aria-label="Open Navigation"
+            aria-label={t.nav.toggleMenuAria || 'Navigation'}
           >
             <Menu size={20} />
           </button>
@@ -115,12 +112,7 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={toggleLanguage}
-            className="px-2.5 py-1 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700"
-          >
-            {language === 'en' ? 'తెలుగు' : language === 'te' ? 'हिन्दी' : 'EN'}
-          </button>
+          <LanguageSelector variant="compact" align="right" />
 
           <Link
             to="/profile"
@@ -169,7 +161,7 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-gray-900 truncate">{displayName}</p>
               <p className="text-[11px] text-gray-500 truncate">
-                {displayLocation || user?.email || 'Active Farmer'}
+                {displayLocation || user?.email || (language === 'te' ? 'క్రియాశీల రైతు' : language === 'hi' ? 'सक्रिय किसान' : 'Active Farmer')}
               </p>
             </div>
           </div>
@@ -203,18 +195,7 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-gray-100 space-y-2">
           {/* Language Switcher pill */}
-          <button
-            onClick={toggleLanguage}
-            className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-[#F6F8F1] transition"
-          >
-            <div className="flex items-center gap-2 text-[#176B45]">
-              <Languages size={15} />
-              <span>{language === 'en' ? 'తెలుగు' : language === 'te' ? 'हिन्दी' : 'English'}</span>
-            </div>
-            <span className="text-[10px] uppercase tracking-wide bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
-              {language.toUpperCase()}
-            </span>
-          </button>
+          <LanguageSelector variant="sidebar" align="left" />
 
           {/* Logout */}
           <button
@@ -256,7 +237,7 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
               <button
                 onClick={() => setShowNotificationToast(!showNotificationToast)}
                 className="p-2 rounded-xl border border-gray-200 text-gray-600 hover:text-[#176B45] hover:border-[#176B45] transition relative"
-                title="Notifications"
+                title={language === 'te' ? 'నోటిఫికేషన్లు' : language === 'hi' ? 'सूचनाएं' : 'Notifications'}
               >
                 <Bell size={16} />
                 <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#75B843]" />
@@ -265,29 +246,29 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
               {showNotificationToast && (
                 <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl text-xs space-y-2 z-50 animate-in fade-in">
                   <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <span className="font-bold text-gray-800">Agricultural Alerts</span>
+                    <span className="font-bold text-gray-800">
+                      {language === 'te' ? 'వ్యవసాయ హెచ్చరికలు' : language === 'hi' ? 'कृषि अलर्ट' : 'Agricultural Alerts'}
+                    </span>
                     <button
                       onClick={() => setShowNotificationToast(false)}
                       className="text-gray-400 hover:text-gray-600 text-[11px]"
                     >
-                      Close
+                      {language === 'te' ? 'మూసివేయి' : language === 'hi' ? 'बंद करें' : 'Close'}
                     </button>
                   </div>
                   <p className="text-gray-600 leading-relaxed">
-                    Welcome to KrishiRakshak AI! Register your farm plots to receive automatic weather risk thresholds.
+                    {language === 'te'
+                      ? 'కృషి రక్షక్ AI కి స్వాగతం! స్వయంచాలక వాతావరణ ముప్పు పరిమితులను పొందడానికి మీ పొలాలను నమోదు చేయండి.'
+                      : language === 'hi'
+                      ? 'कृषि रक्षक AI में आपका स्वागत है! स्वचालित मौसम जोखिम सीमाएं प्राप्त करने के लिए अपने खेतों को पंजीकृत करें।'
+                      : 'Welcome to KrishiRakshak AI! Register your farm plots to receive automatic weather risk thresholds.'}
                   </p>
                 </div>
               )}
             </div>
 
             {/* Language Switcher */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-1.5 rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-[#176B45] hover:text-[#176B45] transition"
-            >
-              <Languages size={15} className="text-[#176B45]" />
-              <span>{language === 'en' ? 'తెలుగు' : language === 'te' ? 'हिन्दी' : 'English'}</span>
-            </button>
+            <LanguageSelector variant="header" align="right" />
 
             {/* Farmer Avatar & Profile Shortcut */}
             <Link
@@ -299,7 +280,7 @@ export function DashboardLayout({ children, activeTab }: DashboardLayoutProps) {
               </div>
               <div className="text-left hidden lg:block">
                 <p className="text-xs font-bold text-gray-800 leading-tight">{displayName}</p>
-                <p className="text-[10px] text-gray-400">{profile?.village || 'Farmer'}</p>
+                <p className="text-[10px] text-gray-400">{profile?.village || defaultFarmerLabel}</p>
               </div>
             </Link>
           </div>

@@ -10,7 +10,7 @@ import type { RegistrationFormData } from '../../types/auth'
 
 export function RegisterPage() {
   const { user } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState<RegistrationFormData>({
@@ -124,13 +124,20 @@ export function RegisterPage() {
             <CheckCircle2 size={32} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-emerald-900">Registration Received!</h3>
+            <h3 className="text-lg font-bold text-emerald-900">
+              {language === 'te' ? 'నమోదు పూర్తయింది!' : language === 'hi' ? 'पंजीकरण प्राप्त हुआ!' : 'Registration Received!'}
+            </h3>
             <p className="mt-2 text-xs leading-relaxed text-emerald-800">
               {successVerification}
             </p>
             {registeredEmail && (
               <p className="mt-2 text-xs font-semibold text-gray-700">
-                Verification link sent to: <span className="text-[#176B45]">{registeredEmail}</span>
+                {language === 'te'
+                  ? 'ధృవీకరణ లింక్ పంపబడింది: '
+                  : language === 'hi'
+                  ? 'सत्यापन लिंक भेजा गया: '
+                  : 'Verification link sent to: '}
+                <span className="text-[#176B45]">{registeredEmail}</span>
               </p>
             )}
           </div>
@@ -158,10 +165,23 @@ export function RegisterPage() {
                     setIsResending(true)
                     setResendStatus(null)
                     await resendVerificationEmail(registeredEmail)
-                    setResendStatus('Verification email resent! Please check your inbox.')
+                    setResendStatus(
+                      language === 'te'
+                        ? 'ధృవీకరణ ఇమెయిల్ మళ్లీ పంపబడింది! దయచేసి మీ ఇన్‌బాక్స్ చూడండి.'
+                        : language === 'hi'
+                        ? 'सत्यापन ईमेल पुनः भेजा गया! कृपया अपना इनबॉक्स देखें।'
+                        : 'Verification email resent! Please check your inbox.'
+                    )
                   } catch (err: unknown) {
                     const errObj = err as { message?: string }
-                    setResendStatus(errObj.message || 'Failed to resend email. Please try again shortly.')
+                    setResendStatus(
+                      errObj.message ||
+                        (language === 'te'
+                          ? 'ఇమెయిల్ పంపడం విఫలమైంది. దయచేసి కాసేపటి తర్వాత మళ్లీ ప్రయత్నించండి.'
+                          : language === 'hi'
+                          ? 'ईमेल भेजने में विफल। कृपया थोड़ी देर बाद पुनः प्रयास करें।'
+                          : 'Failed to resend email. Please try again shortly.')
+                    )
                   } finally {
                     setIsResending(false)
                   }
@@ -171,10 +191,18 @@ export function RegisterPage() {
                 {isResending ? (
                   <>
                     <RefreshCw size={13} className="animate-spin" />
-                    <span>Resending...</span>
+                    <span>
+                      {language === 'te' ? 'మళ్లీ పంపుతోంది...' : language === 'hi' ? 'पुनः भेजा जा रहा है...' : 'Resending...'}
+                    </span>
                   </>
                 ) : (
-                  <span>Resend Verification Email</span>
+                  <span>
+                    {language === 'te'
+                      ? 'ధృవీకరణ ఇమెయిల్ మళ్లీ పంపండి'
+                      : language === 'hi'
+                      ? 'सत्यापन ईमेल पुनः भेजें'
+                      : 'Resend Verification Email'}
+                  </span>
                 )}
               </button>
             )}

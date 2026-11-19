@@ -9,7 +9,7 @@ import type { Farm } from '../../types/farm'
 
 export function WeatherPage() {
   const { user } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [farms, setFarms] = useState<Farm[]>([])
   const [selectedFarmId, setSelectedFarmId] = useState<string>('')
   const [loadingFarms, setLoadingFarms] = useState(true)
@@ -102,7 +102,13 @@ export function WeatherPage() {
         {loadingFarms ? (
           <div className="py-20 flex flex-col items-center justify-center text-center">
             <RefreshCw size={24} className="animate-spin text-[#176B45]" />
-            <p className="mt-2 text-xs text-gray-500 font-medium">Connecting to farm weather stations...</p>
+            <p className="mt-2 text-xs text-gray-500 font-medium">
+              {language === 'te'
+                ? 'వ్యవసాయ వాతావరణ కేంద్రాలకు కనెక్ట్ చేస్తోంది...'
+                : language === 'hi'
+                ? 'खेत मौसम केंद्रों से कनेक्ट किया जा रहा है...'
+                : 'Connecting to farm weather stations...'}
+            </p>
           </div>
         ) : (
           <WeatherDashboard t={t} />

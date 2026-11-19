@@ -1,3 +1,6 @@
+# Supabase local temp files
+supabase/.temp/
+
 # Logs
 logs
 *.log

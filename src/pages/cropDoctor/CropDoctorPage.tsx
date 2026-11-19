@@ -41,6 +41,7 @@ import {
   localizeCropName,
   localizeDiseaseName,
   localizeText,
+  localizeTreatmentType,
   isCropMatching,
 } from '../../utils/cropTranslations'
 import { getOrTranslateDiagnosis } from '../../services/translationCacheService'
@@ -800,7 +801,9 @@ export function CropDoctorPage() {
                         {savedRecordId ? (
                           <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-50 text-[#176B45] text-xs font-bold border border-emerald-200">
                             <CheckCircle2 size={13} />
-                            <span>Saved</span>
+                            <span>
+                              {language === 'te' ? 'భద్రపరచబడింది' : language === 'hi' ? 'सहेजा गया' : 'Saved'}
+                            </span>
                           </span>
                         ) : (
                           <button
@@ -954,9 +957,15 @@ export function CropDoctorPage() {
                       </h4>
                       <p className="mt-2 text-xs text-gray-800 leading-relaxed font-medium">
                         {diagnosisResult.likely_cause
-                          ? (language === 'te' ? localizeText(diagnosisResult.likely_cause, 'te') : diagnosisResult.likely_cause)
+                          ? (language === 'te'
+                              ? localizeText(diagnosisResult.likely_cause, 'te')
+                              : language === 'hi'
+                              ? localizeText(diagnosisResult.likely_cause, 'hi')
+                              : diagnosisResult.likely_cause)
                           : (language === 'te'
                             ? 'వాతావరణంలో అధిక తేమ, నీటి నిల్వ లేదా ఉష్ణోగ్రతల వ్యత్యాసాల వల్ల పంటపై వ్యాధికారక ఒత్తిడి పెరిగింది.'
+                            : language === 'hi'
+                            ? 'फसल में अत्यधिक नमी, जलभराव या मौसम के तनाव से रोगजनक संक्रमण बढ़ा।'
                             : 'Foliar canopy humidity, ambient weather stressors, or microclimate dampness facilitated spore transmission.')}
                       </p>
                     </div>
@@ -1010,7 +1019,11 @@ export function CropDoctorPage() {
                           ))
                         ) : (
                           <li className="text-xs text-gray-500 italic">
-                            {language === 'te' ? 'సేంద్రీయ వేప నూనె లేదా జీవామృతం సిఫార్సు చేయబడింది.' : 'Neem oil spray (5ml/L) or Trichoderma harzianum bioprotection recommended.'}
+                            {language === 'te'
+                              ? 'సేంద్రీయ వేప నూనె లేదా జీవామృతం సిఫార్సు చేయబడింది.'
+                              : language === 'hi'
+                              ? 'नीम का तेल (5 मिली/लीटर) या ट्राइकोडर्मा जैविक नियंत्रण की सिफारिश की जाती है।'
+                              : 'Neem oil spray (5ml/L) or Trichoderma harzianum bioprotection recommended.'}
                           </li>
                         )}
                       </ul>
@@ -1043,7 +1056,9 @@ export function CropDoctorPage() {
                     <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-[11px] text-amber-900 leading-relaxed">
                       <strong className="font-bold flex items-center gap-1 mb-1 text-amber-950">
                         <AlertTriangle size={13} className="text-amber-700" />
-                        <span>Safety Advisory</span>
+                        <span>
+                          {language === 'te' ? 'భద్రతా సలహా' : language === 'hi' ? 'सुरक्षा सलाह' : 'Safety Advisory'}
+                        </span>
                       </strong>
                       <p>{t.cropDoctor.chemicalDisclaimerWarning}</p>
                     </div>
@@ -1087,9 +1102,15 @@ export function CropDoctorPage() {
                           </span>
                           <p className="mt-1 text-gray-600 leading-relaxed">
                             {diagnosisResult.recovery_monitoring?.follow_up_3d
-                              ? (language === 'te' ? localizeText(diagnosisResult.recovery_monitoring.follow_up_3d, 'te') : diagnosisResult.recovery_monitoring.follow_up_3d)
+                              ? (language === 'te'
+                                  ? localizeText(diagnosisResult.recovery_monitoring.follow_up_3d, 'te')
+                                  : language === 'hi'
+                                  ? localizeText(diagnosisResult.recovery_monitoring.follow_up_3d, 'hi')
+                                  : diagnosisResult.recovery_monitoring.follow_up_3d)
                               : (language === 'te'
                                 ? 'కొత్తగా ఏర్పడే మచ్చల పరిమాణాన్ని పరిశీలించండి; మచ్చల వ్యాప్తి ఆగిందో లేదో తనిఖీ చేయండి.'
+                                : language === 'hi'
+                                ? 'धब्बों के फैलाव की जांच करें कि रोग का बढ़ना रुका है या नहीं।'
                                 : 'Inspect lesion margins to verify spreading has ceased.')}
                           </p>
                         </div>
@@ -1101,9 +1122,15 @@ export function CropDoctorPage() {
                           </span>
                           <p className="mt-1 text-gray-600 leading-relaxed">
                             {diagnosisResult.recovery_monitoring?.follow_up_7d
-                              ? (language === 'te' ? localizeText(diagnosisResult.recovery_monitoring.follow_up_7d, 'te') : diagnosisResult.recovery_monitoring.follow_up_7d)
+                              ? (language === 'te'
+                                  ? localizeText(diagnosisResult.recovery_monitoring.follow_up_7d, 'te')
+                                  : language === 'hi'
+                                  ? localizeText(diagnosisResult.recovery_monitoring.follow_up_7d, 'hi')
+                                  : diagnosisResult.recovery_monitoring.follow_up_7d)
                               : (language === 'te'
                                 ? 'కొత్తగా చిగురించే ఆకుల ఆరోగ్యాన్ని మరియు మొక్కల పెరుగుదలను సమీక్షించండి.'
+                                : language === 'hi'
+                                ? 'नई पत्तियों के विकास और फसल की स्थिति का अवलोकन करें।'
                                 : 'Evaluate new foliar shoot emergence and overall canopy vigor.')}
                           </p>
                         </div>
@@ -1217,7 +1244,13 @@ export function CropDoctorPage() {
                         required
                         value={treatmentForm.treatment_name}
                         onChange={(e) => setTreatmentForm({ ...treatmentForm, treatment_name: e.target.value })}
-                        placeholder="e.g. Neem Oil 5ml/L or Trichoderma viride"
+                        placeholder={
+                          language === 'te'
+                            ? 'ఉదా. వేప నూనె 5 మి.లీ./లీ లేదా ట్రైకోడెర్మా విరిడి'
+                            : language === 'hi'
+                            ? 'उदा. नीम का तेल 5 मिली/लीटर या ट्राइकोडर्मा विरिडी'
+                            : 'e.g. Neem Oil 5ml/L or Trichoderma viride'
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-gray-300 text-gray-900 focus:border-[#176B45] outline-none"
                       />
                     </div>
@@ -1267,7 +1300,13 @@ export function CropDoctorPage() {
                         type="text"
                         value={treatmentForm.dosage_or_method || ''}
                         onChange={(e) => setTreatmentForm({ ...treatmentForm, dosage_or_method: e.target.value })}
-                        placeholder="e.g. Foliar knapsack spray during evening hours"
+                        placeholder={
+                          language === 'te'
+                            ? 'ఉదా. సాయంత్రం వేళల్లో ఆకులపై నాప్‌సాక్ స్ప్రే'
+                            : language === 'hi'
+                            ? 'उदा. शाम के समय नैपसैक स्प्रेयर से पत्तियों पर छिड़काव'
+                            : 'e.g. Foliar knapsack spray during evening hours'
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-gray-300 text-gray-900 focus:border-[#176B45] outline-none"
                       />
                     </div>
@@ -1281,7 +1320,13 @@ export function CropDoctorPage() {
                         rows={2}
                         value={treatmentForm.observations || ''}
                         onChange={(e) => setTreatmentForm({ ...treatmentForm, observations: e.target.value })}
-                        placeholder="Weather conditions during spraying, cloud cover, soil moisture..."
+                        placeholder={
+                          language === 'te'
+                            ? 'పిచికారీ సమయంలో వాతావరణం, మేఘావృతం, నేలలో తేమ మొదలైనవి...'
+                            : language === 'hi'
+                            ? 'छिड़काव के समय मौसम की स्थिति, बादलों का आवरण, मिट्टी की नमी...'
+                            : 'Weather conditions during spraying, cloud cover, soil moisture...'
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-gray-300 text-gray-900 focus:border-[#176B45] outline-none"
                       />
                     </div>
@@ -1292,8 +1337,14 @@ export function CropDoctorPage() {
                         {t.cropDoctor.followUpCheckpointsTitle}
                       </span>
                       <div className="flex items-center justify-between text-[11px] text-gray-600">
-                        <span>Day 3: {treatmentForm.follow_up_date_3d}</span>
-                        <span>Day 7: {treatmentForm.follow_up_date_7d}</span>
+                        <span>
+                          {language === 'te' ? '3వ రోజు: ' : language === 'hi' ? 'तीसरा दिन: ' : 'Day 3: '}
+                          {treatmentForm.follow_up_date_3d}
+                        </span>
+                        <span>
+                          {language === 'te' ? '7వ రోజు: ' : language === 'hi' ? 'सातवां दिन: ' : 'Day 7: '}
+                          {treatmentForm.follow_up_date_7d}
+                        </span>
                       </div>
                     </div>
 
@@ -1331,7 +1382,13 @@ export function CropDoctorPage() {
             {loadingHistory ? (
               <div className="py-20 flex flex-col items-center justify-center text-center">
                 <RefreshCw size={26} className="animate-spin text-[#176B45]" />
-                <p className="mt-3 text-xs text-gray-500 font-medium">Loading diagnosis archives...</p>
+                <p className="mt-3 text-xs text-gray-500 font-medium">
+                  {language === 'te'
+                    ? 'నిర్ధారణ రికార్డులను లోడ్ చేస్తోంది...'
+                    : language === 'hi'
+                    ? 'रोग पहचान इतिहास लोड हो रहा है...'
+                    : 'Loading diagnosis archives...'}
+                </p>
               </div>
             ) : historyRecords.length === 0 ? (
               <div className="p-8 sm:p-12 rounded-3xl border border-gray-200 bg-white text-center shadow-xs">
@@ -1505,7 +1562,13 @@ export function CropDoctorPage() {
                         <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
                           <strong className="block text-[#176B45] font-bold mb-2 flex items-center gap-1.5">
                             <CheckSquare size={14} />
-                            <span>Logged Treatments:</span>
+                            <span>
+                              {language === 'te'
+                                ? 'నమోదైన చికిత్సలు:'
+                                : language === 'hi'
+                                ? 'दर्ज किए गए उपचार:'
+                                : 'Logged Treatments:'}
+                            </span>
                           </strong>
                           <div className="space-y-2">
                             {matchedTreatments.map((tr) => (
@@ -1515,8 +1578,17 @@ export function CropDoctorPage() {
                                   <span className="text-[10px] text-gray-400">{tr.application_date}</span>
                                 </div>
                                 <div className="text-[11px] text-gray-500 mt-0.5">
-                                  <span>Type: {tr.treatment_type}</span>
-                                  {tr.dosage_or_method && <span> · Method: {tr.dosage_or_method}</span>}
+                                  <span>
+                                    {language === 'te' ? 'రకం: ' : language === 'hi' ? 'प्रकार: ' : 'Type: '}
+                                    {localizeTreatmentType(tr.treatment_type, language)}
+                                  </span>
+                                  {tr.dosage_or_method && (
+                                    <span>
+                                      {' · '}
+                                      {language === 'te' ? 'విధానం: ' : language === 'hi' ? 'विधि: ' : 'Method: '}
+                                      {tr.dosage_or_method}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                             ))}
@@ -1579,7 +1651,13 @@ export function CropDoctorPage() {
             {loadingTreatments ? (
               <div className="py-20 flex flex-col items-center justify-center text-center">
                 <RefreshCw size={26} className="animate-spin text-[#176B45]" />
-                <p className="mt-3 text-xs text-gray-500 font-medium">Loading treatment journal...</p>
+                <p className="mt-3 text-xs text-gray-500 font-medium">
+                  {language === 'te'
+                    ? 'చికిత్స రికార్డులను లోడ్ చేస్తోంది...'
+                    : language === 'hi'
+                    ? 'उपचार पत्रिका लोड हो रही है...'
+                    : 'Loading treatment journal...'}
+                </p>
               </div>
             ) : recentTreatments.length === 0 ? (
               <div className="p-8 sm:p-12 rounded-3xl border border-gray-200 bg-white text-center shadow-xs">
@@ -1635,14 +1713,16 @@ export function CropDoctorPage() {
 
                         <div className="mt-3 flex items-center justify-between text-xs">
                           <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-700 font-medium text-[11px]">
-                            {tr.treatment_type}
+                            {localizeTreatmentType(tr.treatment_type, language)}
                           </span>
                           {renderRecoveryStatusBadge(tr.recovery_status)}
                         </div>
 
                         {tr.dosage_or_method && (
                           <div className="mt-3 text-xs text-gray-600">
-                            <span className="font-semibold text-gray-700">Method: </span>
+                            <span className="font-semibold text-gray-700">
+                              {language === 'te' ? 'విధానం: ' : language === 'hi' ? 'विधि: ' : 'Method: '}
+                            </span>
                             <span>{tr.dosage_or_method}</span>
                           </div>
                         )}
@@ -1656,12 +1736,16 @@ export function CropDoctorPage() {
                         {/* Follow-up Checkpoints */}
                         <div className="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-[11px]">
                           <div className="p-2 rounded-xl bg-gray-50 border border-gray-100">
-                            <span className="font-bold text-gray-500 block">3-Day Check</span>
-                            <span className="text-gray-800 font-semibold">{tr.follow_up_date_3d || 'N/A'}</span>
+                            <span className="font-bold text-gray-500 block">
+                              {language === 'te' ? '3 రోజుల సమీక్ష' : language === 'hi' ? '3 दिवसीय समीक्षा' : '3-Day Check'}
+                            </span>
+                            <span className="text-gray-800 font-semibold">{tr.follow_up_date_3d || (language === 'te' ? 'వర్తించదు' : language === 'hi' ? 'लागू नहीं' : 'N/A')}</span>
                           </div>
                           <div className="p-2 rounded-xl bg-gray-50 border border-gray-100">
-                            <span className="font-bold text-gray-500 block">7-Day Assess</span>
-                            <span className="text-gray-800 font-semibold">{tr.follow_up_date_7d || 'N/A'}</span>
+                            <span className="font-bold text-gray-500 block">
+                              {language === 'te' ? '7 రోజుల అంచనా' : language === 'hi' ? '7 दिवसीय आकलन' : '7-Day Assess'}
+                            </span>
+                            <span className="text-gray-800 font-semibold">{tr.follow_up_date_7d || (language === 'te' ? 'వర్తించదు' : language === 'hi' ? 'लागू नहीं' : 'N/A')}</span>
                           </div>
                         </div>
                       </div>
@@ -1670,10 +1754,14 @@ export function CropDoctorPage() {
                         {tr.diagnosis_id ? (
                           <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md">
                             <CheckCircle2 size={11} />
-                            <span>AI Linked</span>
+                            <span>
+                              {language === 'te' ? 'AI తో లింక్ చేయబడింది' : language === 'hi' ? 'AI लिंक्ड' : 'AI Linked'}
+                            </span>
                           </span>
                         ) : (
-                          <span className="text-gray-400 text-[10px]">Field Log</span>
+                          <span className="text-gray-400 text-[10px]">
+                            {language === 'te' ? 'క్షేత్ర నమోదు' : language === 'hi' ? 'खेत प्रविष्टि' : 'Field Log'}
+                          </span>
                         )}
 
                         <button
@@ -1714,13 +1802,18 @@ export function CropDoctorPage() {
                     <div>
                       <p className="font-bold text-gray-900">{selectedTreatmentToUpdate.treatment_name}</p>
                       <p className="text-[11px] text-gray-500 mt-0.5">
-                        Applied: {selectedTreatmentToUpdate.application_date}
+                        {language === 'te' ? 'వర్తింపజేసిన తేదీ: ' : language === 'hi' ? 'प्रयोग की तारीख: ' : 'Applied: '}
+                        {selectedTreatmentToUpdate.application_date}
                       </p>
                     </div>
 
                     <div>
                       <label className="block font-semibold text-gray-700 mb-1">
-                        Recovery Status (Based on Field Observation)
+                        {language === 'te'
+                          ? 'కోలుకునే స్థితి (క్షేత్ర పరిశీలన ఆధారంగా)'
+                          : language === 'hi'
+                          ? 'सुधार की स्थिति (खेत निरीक्षण के आधार पर)'
+                          : 'Recovery Status (Based on Field Observation)'}
                       </label>
                       <select
                         value={updatingRecoveryStatus}
@@ -1736,13 +1829,23 @@ export function CropDoctorPage() {
 
                     <div>
                       <label className="block font-semibold text-gray-700 mb-1">
-                        Updated Field Observations
+                        {language === 'te'
+                          ? 'నవీకరించబడిన క్షేత్ర పరిశీలనలు'
+                          : language === 'hi'
+                          ? 'अद्यतनित खेत टिप्पणियाँ'
+                          : 'Updated Field Observations'}
                       </label>
                       <textarea
                         rows={3}
                         value={updatingObservations}
                         onChange={(e) => setUpdatingObservations(e.target.value)}
-                        placeholder="Inspect lesion perimeters or foliar regrowth. Record actual status..."
+                        placeholder={
+                          language === 'te'
+                            ? 'మచ్చల వ్యాప్తి ఆగిందో లేదా కొత్తగా ఆకులు చిగురిస్తున్నాయో పరిశీలించి నమోదు చేయండి...'
+                            : language === 'hi'
+                            ? 'धब्बों के फैलाव की जांच करें या नई पत्तियों के विकास की वास्तविक स्थिति दर्ज करें...'
+                            : 'Inspect lesion perimeters or foliar regrowth. Record actual status...'
+                        }
                         className="w-full px-3 py-2 rounded-xl border border-gray-300 text-gray-900 focus:border-[#176B45] outline-none"
                       />
                     </div>
