@@ -3,6 +3,7 @@ import { Link, useNavigate, Navigate } from 'react-router-dom'
 import { UserPlus, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react'
 import { AuthLayout } from '../../components/auth/AuthLayout'
 import { PasswordInput } from '../../components/auth/PasswordInput'
+import { GoogleSignInButton } from '../../components/auth/GoogleSignInButton'
 import { registerFarmer, resendVerificationEmail } from '../../services/authService'
 import { useAuth } from '../../hooks/useAuth'
 import { useLanguage } from '../../hooks/useLanguage'
@@ -367,6 +368,21 @@ export function RegisterPage() {
                 </>
               )}
             </button>
+
+            {/* Divider with OR CONTINUE WITH */}
+            <div className="relative my-4 flex items-center justify-center">
+              <div className="w-full border-t border-gray-200" />
+              <span className="absolute bg-white px-3 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                {t.auth.orContinueWith}
+              </span>
+            </div>
+
+            {/* Sign up with Google */}
+            <GoogleSignInButton
+              text={t.auth.signUpWithGoogle}
+              onError={(msg) => setErrorMessage(msg)}
+              disabled={isLoading}
+            />
           </form>
 
           {/* Footer link to Login */}

@@ -1,25 +1,25 @@
 import { useState, useRef, useEffect } from 'react'
-import { Languages, Check, ChevronDown } from 'lucide-react'
+import { Globe, Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { useLanguage } from '../../hooks/useLanguage'
 import type { Language } from '../../locales/translations'
 
 interface LanguageOption {
   code: string
-  label: string
-  subLabel?: string
+  nativeName: string
+  englishName: string
   available: boolean
 }
 
 const SUPPORTED_LANGUAGES: LanguageOption[] = [
-  { code: 'en', label: 'English', available: true },
-  { code: 'te', label: 'Telugu', subLabel: 'తెలుగు', available: true },
-  { code: 'hi', label: 'Hindi', subLabel: 'हिन्दी', available: true },
-  { code: 'ta', label: 'Tamil', subLabel: 'தமிழ்', available: false },
-  { code: 'kn', label: 'Kannada', subLabel: 'ಕನ್ನಡ', available: false },
+  { code: 'en', nativeName: 'English', englishName: 'English', available: true },
+  { code: 'te', nativeName: 'తెలుగు', englishName: 'Telugu', available: true },
+  { code: 'hi', nativeName: 'हिन्दी', englishName: 'Hindi', available: true },
+  { code: 'ta', nativeName: 'தமிழ்', englishName: 'Tamil', available: false },
+  { code: 'kn', nativeName: 'ಕನ್ನಡ', englishName: 'Kannada', available: false },
 ]
 
 interface LanguageSelectorProps {
-  /** Visual variant: 'header' (default bordered pill), 'compact' (smaller for mobile headers), 'sidebar' (full width for sidebar drawer) */
+  /** Visual variant: 'header' (pill matching topbar), 'compact' (smaller for mobile), 'sidebar' (full width) */
   variant?: 'header' | 'compact' | 'sidebar'
   /** Dropdown menu placement direction */
   align?: 'left' | 'right'
@@ -70,36 +70,32 @@ export function LanguageSelector({
 
   const handleSelect = (langOption: LanguageOption) => {
     if (!langOption.available) {
-      return // Do nothing for disabled/coming soon languages
+      return // Tamil and Kannada are previewed in dropdown but full translation is forthcoming
     }
     setLanguage(langOption.code as Language)
     setIsOpen(false)
   }
 
-  // Active language display name
+  // Active language option
   const currentLangOption =
     SUPPORTED_LANGUAGES.find((l) => l.code === language) || SUPPORTED_LANGUAGES[0]
 
-  const currentDisplayName =
-    language === 'en'
-      ? 'English'
-      : language === 'te'
-      ? 'తెలుగు'
-      : language === 'hi'
-      ? 'हिन्दी'
-      : currentLangOption.label
+  const buttonText = `${currentLangOption.nativeName} (${currentLangOption.code.toUpperCase()})`
 
-  // Base button styles per variant matching existing project design
+  // Base button styles per variant matching screenshot
   const buttonStyle =
     variant === 'compact'
-      ? 'px-2.5 py-1 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 hover:border-[#176B45] hover:text-[#176B45] bg-white transition inline-flex items-center gap-1.5'
+      ? 'inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-800 shadow-2xs hover:border-gray-300 transition'
       : variant === 'sidebar'
-      ? 'w-full flex items-center justify-between px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-[#F6F8F1] bg-white transition'
-      : 'flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#24332A] shadow-2xs hover:border-[#176B45] hover:text-[#176B45] transition'
+      ? 'w-full flex items-center justify-between rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-50 transition'
+      : 'inline-flex items-center gap-2.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-2xs hover:border-gray-300 transition cursor-pointer'
 
   return (
-    <div ref={dropdownRef} className={`relative inline-block text-left ${variant === 'sidebar' ? 'w-full' : ''} ${className}`}>
-      {/* Trigger Button */}
+    <div
+      ref={dropdownRef}
+      className={`relative inline-block text-left ${variant === 'sidebar' ? 'w-full' : ''} ${className}`}
+    >
+      {/* Trigger Button matching screenshot: (Globe) తెలుగు (TE) ^ */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -110,60 +106,51 @@ export function LanguageSelector({
       >
         {variant === 'sidebar' ? (
           <>
-            <div className="flex items-center gap-2 text-[#176B45]">
-              <Languages size={15} />
-              <span className="font-semibold text-gray-800">{currentDisplayName}</span>
+            <div className="flex items-center gap-2.5 text-teal-600">
+              <Globe size={18} />
+              <span className="font-semibold text-gray-800">{buttonText}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase tracking-wide bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded font-bold">
-                {language.toUpperCase()}
-              </span>
-              <ChevronDown
-                size={14}
-                className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-              />
-            </div>
-          </>
-        ) : variant === 'compact' ? (
-          <>
-            <Languages size={13} className="text-[#176B45]" />
-            <span>{language === 'en' ? 'EN' : currentDisplayName}</span>
-            <ChevronDown
-              size={12}
-              className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-            />
+            {isOpen ? (
+              <ChevronUp size={16} className="text-gray-500" />
+            ) : (
+              <ChevronDown size={16} className="text-gray-500" />
+            )}
           </>
         ) : (
           <>
-            <Languages size={15} className="text-[#176B45]" />
-            <span>{currentDisplayName}</span>
-            <ChevronDown
-              size={13}
-              className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-            />
+            <Globe size={variant === 'compact' ? 15 : 18} className="text-teal-600 shrink-0" />
+            <span className="whitespace-nowrap">{buttonText}</span>
+            {isOpen ? (
+              <ChevronUp size={variant === 'compact' ? 14 : 16} className="text-gray-500 shrink-0" />
+            ) : (
+              <ChevronDown size={variant === 'compact' ? 14 : 16} className="text-gray-500 shrink-0" />
+            )}
           </>
         )}
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu matching screenshot (without bottom preview box) */}
       {isOpen && (
         <div
           role="listbox"
           aria-label="Languages"
-          className={`absolute z-50 mt-1.5 w-60 rounded-2xl border border-[#E5EAE2] bg-white p-1.5 shadow-xl transition-all duration-150 animate-in fade-in slide-in-from-top-1 ${
+          className={`absolute z-50 w-64 rounded-2xl border border-gray-200/90 bg-white shadow-xl transition-all duration-150 overflow-hidden ${
             align === 'left' ? 'left-0' : 'right-0'
-          } ${variant === 'sidebar' ? 'bottom-full mb-2 mt-0' : ''}`}
+          } ${variant === 'sidebar' ? 'bottom-full mb-2' : 'mt-2'}`}
         >
-          <div className="px-3 py-1.5 text-[10px] font-bold tracking-wider text-gray-400 uppercase">
-            Select Language / భాష ఎంచుకోండి
+          {/* Header */}
+          <div className="px-5 pt-4 pb-3 border-b border-gray-100">
+            <div className="text-[11px] font-bold text-gray-500 tracking-wider uppercase leading-snug">
+              SELECT LANGUAGE / భాష
+              <br />
+              ఎంచుకోండి
+            </div>
           </div>
 
-          <div className="my-1 border-t border-gray-100" />
-
-          <div className="space-y-0.5">
+          {/* Language Options List */}
+          <div className="py-1">
             {SUPPORTED_LANGUAGES.map((item) => {
               const isSelected = item.code === language
-              const isAvailable = item.available
 
               return (
                 <button
@@ -171,40 +158,33 @@ export function LanguageSelector({
                   type="button"
                   role="option"
                   aria-selected={isSelected}
-                  disabled={!isAvailable}
                   onClick={() => handleSelect(item)}
-                  className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs transition-colors text-left ${
+                  className={`w-full flex items-center justify-between px-5 py-2.5 text-left transition-colors cursor-pointer ${
                     isSelected
-                      ? 'bg-emerald-50 text-[#176B45] font-semibold'
-                      : isAvailable
-                      ? 'text-gray-700 hover:bg-[#F6F8F1] hover:text-[#176B45] cursor-pointer'
-                      : 'text-gray-400 bg-gray-50/50 cursor-not-allowed opacity-75'
+                      ? 'bg-[#E6F4F1] text-teal-700'
+                      : 'text-gray-800 hover:bg-gray-50'
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="truncate">
-                      {item.label}
-                      {item.subLabel ? (
-                        <span className="ml-1.5 text-[11px] text-gray-500 font-normal">
-                          ({item.subLabel})
-                        </span>
-                      ) : null}
+                  <div className="flex flex-col">
+                    <span
+                      className={`text-[15px] font-medium leading-tight ${
+                        isSelected ? 'text-teal-700 font-semibold' : 'text-gray-800'
+                      }`}
+                    >
+                      {item.nativeName}
+                    </span>
+                    <span
+                      className={`text-xs mt-0.5 ${
+                        isSelected ? 'text-teal-600' : 'text-gray-400'
+                      }`}
+                    >
+                      {item.englishName}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    {!isAvailable && (
-                      <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700 border border-amber-200/80">
-                        Coming Soon
-                      </span>
-                    )}
-
-                    {isSelected && (
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#176B45] text-white">
-                        <Check size={12} strokeWidth={2.5} />
-                      </span>
-                    )}
-                  </div>
+                  {isSelected && (
+                    <Check size={18} className="text-teal-600 stroke-[2.5]" />
+                  )}
                 </button>
               )
             })}

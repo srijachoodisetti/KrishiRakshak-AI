@@ -168,6 +168,9 @@ export interface AuthTranslations {
   registering: string
   sending: string
   updating: string
+  continueWithGoogle: string
+  signUpWithGoogle: string
+  orContinueWith: string
 }
 
 export interface DashboardTranslations {
@@ -829,6 +832,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       registering: 'Creating account...',
       sending: 'Sending email...',
       updating: 'Updating...',
+      continueWithGoogle: 'Continue with Google',
+      signUpWithGoogle: 'Sign up with Google',
+      orContinueWith: 'OR CONTINUE WITH',
     },
     dashboard: {
       title: 'Farmer Dashboard',
@@ -1467,6 +1473,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       registering: 'ఖాతా సృష్టిస్తోంది...',
       sending: 'లింక్ పంపుతోంది...',
       updating: 'నవీకరిస్తోంది...',
+      continueWithGoogle: 'Googleతో కొనసాగించండి',
+      signUpWithGoogle: 'Googleతో నమోదు చేసుకోండి',
+      orContinueWith: 'లేదా Googleతో కొనసాగించండి',
     },
     dashboard: {
       title: 'రైతు డ్యాష్‌బోర్డ్',
@@ -2087,7 +2096,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     "passwordResetSuccess": "Password updated successfully! You can now log in.",
     "signingIn": "Signing in...",
     "sending": "Sending email...",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "continueWithGoogle": "Google के साथ जारी रखें",
+    "signUpWithGoogle": "Google से साइन अप करें",
+    "orContinueWith": "या Google के साथ जारी रखें"
   },
   "dashboard": {
     "welcome": "स्वागत है",

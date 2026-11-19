@@ -78,6 +78,26 @@ export async function loginFarmer(data: LoginFormData) {
   return authData
 }
 
+export async function signInWithGoogle() {
+  const siteUrl = window.location.origin
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${siteUrl}/dashboard`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
+  })
+
+  if (error) {
+    throw error
+  }
+
+  return data
+}
+
 export async function logoutFarmer() {
   const { error } = await supabase.auth.signOut()
   if (error) {
