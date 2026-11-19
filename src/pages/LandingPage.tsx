@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Sprout,
   Menu,
@@ -40,9 +40,17 @@ const featureCardConfigs = [
 const stepIcons = [User, MapPin, Search, Sprout]
 
 export function LandingPage() {
+  const navigate = useNavigate()
   const { user, profile, signOut } = useAuth()
   const { t, language } = useLanguage()
   const [mobileMenu, setMobileMenu] = useState(false)
+
+  // Redirect to dashboard if returning from OAuth provider callback (e.g. Google Sign-In)
+  useEffect(() => {
+    if (window.location.hash.includes('access_token=')) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [navigate])
 
   const isTelugu = language === 'te'
 
